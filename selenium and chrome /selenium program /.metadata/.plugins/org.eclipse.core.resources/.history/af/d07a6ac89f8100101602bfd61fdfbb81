@@ -1,0 +1,62 @@
+package pac1;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
+
+public class LAB_6 {
+    public static void main(String[] args) {
+        WebDriver driver = new ChromeDriver();
+        driver.manage().window().maximize();
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+        try {
+            // 1. Open site
+            driver.get("https://tutorialsninja.com/demo/");
+
+            // 2. Click on My Account → Login
+            driver.findElement(By.xpath("//span[text()='My Account']")).click();
+            driver.findElement(By.linkText("Login")).click();
+
+            // 3. Enter credentials
+            driver.findElement(By.id("input-email")).sendKeys("srihitha@test.com");
+            driver.findElement(By.id("input-password")).sendKeys("12345");
+            driver.findElement(By.xpath("//input[@value='Login']")).click();
+            System.out.println("Login successful with: srihitha@test.com");
+
+            // 4. Go to Monitors (under Desktops → Show All Desktops)
+            driver.findElement(By.linkText("Desktops")).click();
+            driver.findElement(By.linkText("Show All Desktops")).click();
+            driver.findElement(By.linkText("Monitors (2)")).click();
+
+            // 5. Scroll and add Samsung monitor to cart
+            WebElement samsungAddBtn = wait.until(ExpectedConditions.elementToBeClickable(
+                    By.xpath("//a[text()='Samsung SyncMaster 941BW']/ancestor::div[@class='product-thumb']//button[@data-original-title='Add to Cart']")));
+
+            samsungAddBtn.click();
+            System.out.println("Samsung SyncMaster 941BW added to cart.");
+
+            // 6. Go to Cart
+            WebElement cartBtn = wait.until(ExpectedConditions.elementToBeClickable(
+                    By.xpath("//button[@data-toggle='dropdown' and @data-loading-text='Loading...']")));
+            cartBtn.click();
+
+            // 7. Click Checkout
+            wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Checkout"))).click();
+
+            // 8. Confirm Checkout Page Loaded
+            wait.until(ExpectedConditions.titleContains("Checkout"));
+            System.out.println("Navigated to Checkout page successfully.");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            driver.quit();
+        }
+    }
+}

@@ -1,0 +1,65 @@
+package pac1;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
+
+public class LAB_6 {
+    public static void main(String[] args) {
+        WebDriver driver = new ChromeDriver();
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+        try {
+            // 1. Open site
+            driver.get("https://tutorialsninja.com/demo/");
+            driver.manage().window().maximize();
+
+            // 2. Click My Account -> Login
+            driver.findElement(By.xpath("//span[text()='My Account']")).click();
+            driver.findElement(By.xpath("//a[text()='Login']")).click();
+
+            // 3. Enter login details
+            driver.findElement(By.id("input-email")).sendKeys("srihitha@test.com");
+            driver.findElement(By.id("input-password")).sendKeys("12345");
+            driver.findElement(By.xpath("//input[@value='Login']")).click();
+            System.out.println("Login successful with: srihitha@test.com");
+
+            // 4. Go to Monitors
+            WebElement desktopsMenu = driver.findElement(By.xpath("//a[text()='Components']"));
+            desktopsMenu.click();
+            driver.findElement(By.xpath("//a[text()='Monitors (2)']")).click();
+
+            // 5. Add Samsung SyncMaster 941BW to cart
+            WebElement samsungAddToCart = wait.until(ExpectedConditions.elementToBeClickable(
+                    By.xpath("//a[text()='Samsung SyncMaster 941BW']/../..//button[@onclick]")
+            ));
+            samsungAddToCart.click();
+            System.out.println("Samsung SyncMaster 941BW added to cart.");
+
+            // 6. Go to cart
+            wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[text()='Shopping Cart']"))).click();
+
+            // 7. Verify Samsung is in the cart
+            WebElement samsungCart = wait.until(ExpectedConditions.presenceOfElementLocated(
+                    By.xpath("//a[text()='Samsung SyncMaster 941BW']")));
+            if (samsungCart.isDisplayed()) {
+                System.out.println("Verified: Samsung SyncMaster 941BW is in the cart.");
+            }
+
+            // 8. Logout
+            driver.findElement(By.xpath("//span[text()='My Account']")).click();
+            driver.findElement(By.xpath("//a[text()='Logout']")).click();
+            System.out.println("Logout successful.");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            driver.quit();
+        }
+    }
+}

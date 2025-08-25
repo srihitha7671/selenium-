@@ -1,0 +1,26 @@
+package pac1;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+public class LAB_5_Part_4 {
+    public static void main(String[] args) {
+        WebDriver driver = new ChromeDriver();
+        driver.manage().window().maximize();
+        driver.get("https://tutorialsninja.com/demo/index.php?route=account/register");
+
+        // Password (4–20 characters)
+        WebElement password = driver.findElement(By.id("input-password"));
+        password.sendKeys("Test@123");  // 8 chars
+        System.out.println("Password entered successfully.");
+
+        // Confirm Password
+        WebElement confirmPassword = driver.findElement(By.id("input-confirm"));
+        confirmPassword.sendKeys("Test@123");
+        System.out.println("Confirm Password entered successfully.");
+
+        driver.quit();
+    }
+}

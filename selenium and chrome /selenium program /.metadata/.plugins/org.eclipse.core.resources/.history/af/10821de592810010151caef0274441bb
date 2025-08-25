@@ -1,0 +1,78 @@
+package pac1;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import java.time.Duration;
+
+public class LAB_6 {
+    public static void main(String[] args) {
+        // Setup ChromeDriver
+        WebDriver driver = new ChromeDriver();
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        
+        try {
+            // 1. Launch site
+            driver.get("https://tutorialsninja.com/demo/");
+            driver.manage().window().maximize();
+
+            System.out.println("Lab 6 Test Start...");
+
+            // 2. Login
+            driver.findElement(By.xpath("//span[text()='My Account']")).click();
+            driver.findElement(By.linkText("Login")).click();
+
+            driver.findElement(By.id("input-email")).sendKeys("srihitha@test.com");
+            driver.findElement(By.id("input-password")).sendKeys("test123");
+            driver.findElement(By.xpath("//input[@value='Login']")).click();
+            System.out.println("Login successful with: srihitha@test.com");
+
+            // 3. Click Components → Monitors (2)
+            WebElement components = driver.findElement(By.linkText("Components"));
+            components.click();
+
+            WebElement monitors = wait.until(
+                ExpectedConditions.elementToBeClickable(By.linkText("Monitors (2)"))
+            );
+            monitors.click();
+
+            // 4. Add Apple Cinema to Wishlist
+            WebElement appleCinemaWishlist = driver.findElement(
+                By.xpath("(//button[@data-original-title='Add to Wish List'])[1]")
+            );
+            appleCinemaWishlist.click();
+            System.out.println("Apple Cinema added to wishlist");
+
+            // 5. Search Mobile
+            WebElement searchBox = driver.findElement(By.name("search"));
+            searchBox.clear();
+            searchBox.sendKeys("Mobile");
+            driver.findElement(By.cssSelector("button.btn.btn-default.btn-lg")).click();
+
+            // 6. Add HTC Touch HD to Cart
+            WebElement htcTouch = driver.findElement(By.linkText("HTC Touch HD"));
+            htcTouch.click();
+            driver.findElement(By.id("button-cart")).click();
+            System.out.println("HTC Touch HD added to cart");
+
+            // 7. Checkout
+            driver.findElement(By.linkText("Shopping Cart")).click();
+            driver.findElement(By.linkText("Checkout")).click();
+            System.out.println("Checkout initiated");
+
+            // 8. Logout
+            driver.findElement(By.xpath("//span[text()='My Account']")).click();
+            driver.findElement(By.linkText("Logout")).click();
+            System.out.println("Logout successful");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            driver.quit();
+            System.out.println("Lab 6 Test Completed!");
+        }
+    }
+}

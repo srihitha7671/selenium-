@@ -1,0 +1,115 @@
+package pac1;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import java.time.Duration;
+
+public class LAB_6 {
+    public static void main(String[] args) {
+
+        WebDriver driver = new ChromeDriver();
+        driver.manage().window().maximize();
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        try {
+            // 1. Login with credentials created in Lab 1
+            driver.get("https://tutorialsninja.com/demo/index.php?route=account/login");
+            driver.findElement(By.id("input-email")).sendKeys("srihitha@test.com");
+            driver.findElement(By.id("input-password")).sendKeys("Password@123");
+            driver.findElement(By.xpath("//input[@value='Login']")).click();
+            System.out.println("Login successful with: srihitha@test.com");
+
+            // 2. Go to 'Components' -> 3. Select 'Monitors'
+            WebElement componentsMenu = driver.findElement(By.xpath("//a[text()='Components']"));
+            componentsMenu.click();
+            driver.findElement(By.xpath("//a[contains(text(),'Monitors')]")).click();
+
+            // 4. Select 25 from 'Show' dropdown
+            Select showDropdown = new Select(driver.findElement(By.id("input-limit")));
+            showDropdown.selectByVisibleText("25");
+
+            // 5. Click on 'Add to cart' for Samsung SyncMaster 941BW
+            WebElement samsungAddToCart = wait.until(ExpectedConditions.elementToBeClickable(
+                By.xpath("//a[text()='Samsung SyncMaster 941BW']/../..//button[@data-original-title='Add to Cart']")));
+            samsungAddToCart.click();
+            System.out.println("Samsung SyncMaster 941BW added to cart.");
+
+            // 6. Click on 'Specification' tab
+            driver.findElement(By.xpath("//a[text()='Specification']")).click();
+
+            // 7. Verify details present on the page
+            if (driver.findElement(By.id("tab-specification")).isDisplayed()) {
+                System.out.println("Specification details are displayed.");
+            }
+
+            // 8. Click on 'Add to Wish list' button
+            driver.findElement(By.xpath("//button[@data-original-title='Add to Wish List']")).click();
+
+            // 9. Verify wishlist success message
+            WebElement wishlistMsg = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//div[contains(@class,'alert-success')]")));
+            if (wishlistMsg.getText().contains("Success: You have added Samsung SyncMaster 941BW to your wish list!")) {
+                System.out.println("Wishlist success message verified.");
+            }
+
+            // 10. Enter 'Mobile' in search box
+            driver.findElement(By.name("search")).sendKeys("Mobile");
+
+            // 11. Click on 'Search' button
+            driver.findElement(By.xpath("//button[@class='btn btn-default btn-lg']")).click();
+
+            // 12. Click on 'Search in product descriptions' check box
+            driver.findElement(By.name("description")).click();
+
+            // 13. Click on link 'HTC Touch HD'
+            driver.findElement(By.linkText("HTC Touch HD")).click();
+
+            // 14. Clear '1' from Qty and enter '3'
+            WebElement qtyBox = driver.findElement(By.id("input-quantity"));
+            qtyBox.clear();
+            qtyBox.sendKeys("3");
+
+            // 15. Click on 'Add to Cart'
+            driver.findElement(By.id("button-cart")).click();
+
+            // 16. Verify HTC success message
+            WebElement htcMsg = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//div[contains(@class,'alert-success')]")));
+            if (htcMsg.getText().contains("Success: You have added HTC Touch HD to your shopping cart!")) {
+                System.out.println("HTC Touch HD added successfully to cart.");
+            }
+
+            // 17. Click on 'View cart'
+            driver.findElement(By.xpath("//a[@title='Shopping Cart']")).click();
+
+            // 18. Verify Mobile name in cart
+            if (driver.findElement(By.xpath("//a[text()='HTC Touch HD']")).isDisplayed()) {
+                System.out.println("HTC Touch HD is present in cart.");
+            }
+
+            // 19. Click on 'Checkout'
+            driver.findElement(By.linkText("Checkout")).click();
+
+            // 20. Click on 'My Account' dropdown
+            driver.findElement(By.xpath("//a[@title='My Account']")).click();
+
+            // 21. Select 'Logout'
+            driver.findElement(By.linkText("Logout")).click();
+
+            // 22. Verify 'Account' logo
+            if (driver.findElement(By.xpath("//h1[text()='Account Logout']")).isDisplayed()) {
+                System.out.println("Logout successful - Account logo verified.");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            driver.quit();
+        }
+    }
+}

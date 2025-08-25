@@ -1,0 +1,57 @@
+package New;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+import java.util.Set;
+
+public class verifyVideoTutorial {
+    public static void main(String[] args) {
+        // Set ChromeDriver path (update if needed)
+        System.setProperty("webdriver.chrome.driver", "/opt/homebrew/bin/chromedriver");
+
+        WebDriver driver = new ChromeDriver();
+
+        try {
+            // Open the Contact Us page (replace with your actual URL)
+            driver.get("https://automationexercise.com/contact_us");
+            driver.manage().window().maximize();
+
+            // Click on Video Tutorials
+            WebElement videoTutorials = driver.findElement(By.linkText("Video Tutorials"));
+            videoTutorials.click();
+            System.out.println("Clicked on Video Tutorials link");
+
+            // Store the current window handle
+            String parentWindow = driver.getWindowHandle();
+
+            // Switch to new window (YouTube opens in a new tab)
+            Set<String> allWindows = driver.getWindowHandles();
+            for (String window : allWindows) {
+                if (!window.equals(parentWindow)) {
+                    driver.switchTo().window(window);
+                    break;
+                }
+            }
+
+            // Verification
+            String currentUrl = driver.getCurrentUrl();
+            if (currentUrl.contains("youtube")) {
+                System.out.println("✅ Successfully navigated to YouTube Video Tutorials page.");
+            } else {
+                System.out.println("❌ Navigation to Video Tutorials failed.");
+            }
+
+            // Close the YouTube tab and switch back to parent
+            driver.close();
+            driver.switchTo().window(parentWindow);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            driver.quit();
+        }
+    }
+}
