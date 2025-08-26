@@ -1,0 +1,9 @@
+package pac1;
+
+public class TC001 {
+
+	public static void main(String[] args) {
+   WebDriverManager.chromedriver().setup();
+	}
+
+}

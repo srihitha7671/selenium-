@@ -1,0 +1,104 @@
+package pac1;
+
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.Test;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeClass;
+import org.testng.AssertJUnit;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import io.github.bonigarcia.wdm.WebDriverManager;
+import java.time.Duration;
+
+public class Lab3TestNG {
+    private WebDriver driver;
+
+    @BeforeMethod
+	@BeforeMethod
+    public void setUp() {
+        System.out.println("This is Before Method: Setting up WebDriver.");
+        WebDriverManager.chromedriver().setup();
+        driver = new ChromeDriver();
+    }
+
+    @AfterMethod
+	@AfterMethod
+    public void tearDown() {
+        System.out.println("This is After Method: Tearing down WebDriver.");
+        if (driver != null) {
+            driver.quit();
+        }
+    }
+
+    @Test
+    public void productNavigationAndAddToCartTest() {
+        driver.get("https://tutorialsninja.com/demo/index.php?");
+        System.out.println("Opened TutorialsNinja site");
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        WebElement desktopsLink = wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Desktops")));
+        desktopsLink.click();
+
+        WebElement macLink = wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Mac (1)")));
+        macLink.click();
+        System.out.println("Navigated to Mac page");
+
+        WebElement dropdownElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-sort")));
+        Select dropdown = new Select(dropdownElement);
+        dropdown.selectByVisibleText("Name (A - Z)");
+        System.out.println("Sorted by Name (A-Z)");
+
+        WebElement addToCartButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@class='product-layout product-grid col-lg-4 col-md-4 col-sm-6 col-xs-12']//button[contains(@onclick, 'cart.add')]")));
+        AssertJUnit.assertTrue(addToCartButton.isDisplayed(), "Add to cart button should be displayed");
+        System.out.println("Verified product is visible");
+
+        addToCartButton.click();
+    }
+
+    @BeforeClass
+    public void beforeClass() {
+        System.out.println("This is Before Class");
+    }
+
+    @AfterClass
+    public void afterClass() {
+        System.out.println("This is After class");
+    }
+
+    @BeforeTest
+    public void beforeTest() {
+        System.out.println("This is Before test");
+    }
+
+    @AfterTest
+    public void afterTest() {
+        System.out.println("This is After test");
+    }
+
+    @BeforeSuite
+    public void beforeSuite() {
+        System.out.println("This is Before suite");
+    }
+
+    @AfterSuite
+    public void afterSuite() {
+        System.out.println("This is After suite");
+    }
+}

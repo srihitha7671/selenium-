@@ -1,0 +1,93 @@
+package pac1;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import java.time.Duration;
+
+public class LAB_5_Part_5 {
+
+    public static void main(String[] args) {
+        // Set path for chromedriver if not set in system PATH
+        // System.setProperty("webdriver.chrome.driver", "path/to/chromedriver");
+
+        WebDriver driver = new ChromeDriver();
+        driver.manage().window().maximize();
+
+        try {
+            // Part 1: Launch Application
+            driver.get("https://tutorialsninja.com/demo/");
+
+            // Verify Title
+            String title = driver.getTitle();
+            if (title.equals("Your Store")) {
+                System.out.println("Title verified: " + title);
+            } else {
+                System.out.println("Title mismatch! Found: " + title);
+            }
+
+            // Click My Account -> Register
+            driver.findElement(By.xpath("//span[text()='My Account']")).click();
+            driver.findElement(By.linkText("Register")).click();
+
+            // Verify heading
+            WebElement heading = driver.findElement(By.xpath("//h1[text()='Register Account']"));
+            if (heading.isDisplayed()) {
+                System.out.println("Register Account page verified.");
+            }
+
+            // Click Continue without entering data (to check Privacy Policy warning)
+            driver.findElement(By.xpath("//input[@value='Continue']")).click();
+            WebElement warning = driver.findElement(By.xpath("//div[contains(@class,'alert-danger')]"));
+            System.out.println("Warning displayed: " + warning.getText());
+
+            // Part 2: Personal Details
+            WebElement firstName = driver.findElement(By.id("input-firstname"));
+            firstName.sendKeys("ThisIsA33CharacterNameForTesting12");
+            driver.findElement(By.xpath("//input[@value='Continue']")).click();
+
+            WebElement firstnameError = driver.findElement(By.xpath("//div[contains(text(),'First Name must be between')]"));
+            if (firstnameError.isDisplayed()) {
+                System.out.println("First name validation message verified.");
+            }
+
+            driver.findElement(By.id("input-firstname")).clear();
+            driver.findElement(By.id("input-firstname")).sendKeys("Srihitha");
+
+            driver.findElement(By.id("input-lastname")).sendKeys("Pusuluru");
+            driver.findElement(By.id("input-email")).sendKeys("test" + System.currentTimeMillis() + "@mail.com");
+            driver.findElement(By.id("input-telephone")).sendKeys("9876543210");
+
+            // Part 4: Password
+            driver.findElement(By.id("input-password")).sendKeys("test1234");
+            driver.findElement(By.id("input-confirm")).sendKeys("test1234");
+
+            // Part 4: Newsletter + Privacy Policy
+            driver.findElement(By.xpath("//input[@name='newsletter' and @value='1']")).click();
+            driver.findElement(By.name("agree")).click();
+            driver.findElement(By.xpath("//input[@value='Continue']")).click();
+
+            // Wait for success message
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+            WebElement successMsg = wait.until(
+                    ExpectedConditions.visibilityOfElementLocated(By.xpath("//h1[text()='Your Account Has Been Created!']"))
+            );
+            System.out.println("Success Message: " + successMsg.getText());
+
+            // Continue button after success
+            driver.findElement(By.xpath("//a[text()='Continue']")).click();
+
+            // Click on "View your order history"
+            driver.findElement(By.linkText("View your order history")).click();
+            System.out.println("Navigated to Order History page.");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            driver.quit();
+        }
+    }
+}

@@ -1,0 +1,49 @@
+package New;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
+
+public class verifyaddCartButton {
+    public static void main(String[] args) {
+        System.setProperty("webdriver.chrome.driver", "/opt/homebrew/bin/chromedriver");
+        WebDriver driver = new ChromeDriver();
+        driver.manage().window().maximize();
+
+        driver.get("https://automationexercise.com/products");
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        // ✅ Click Add to Cart (first product)
+        WebElement addToCart = wait.until(ExpectedConditions
+                .elementToBeClickable(By.xpath("(//a[contains(text(),'Add to cart')])[1]")));
+        addToCart.click();
+        System.out.println("✅ Clicked 'Add to Cart' for first product.");
+
+        // ✅ Wait for modal confirmation
+        WebElement modal = wait.until(ExpectedConditions
+                .visibilityOfElementLocated(By.xpath("//div[@class='modal-content']")));
+        System.out.println("✅ Product added to cart - confirmation modal displayed.");
+
+        // ✅ Click "View Cart" instead of Continue Shopping
+        WebElement viewCartBtn = driver.findElement(By.xpath("//u[contains(text(),'View Cart')]"));
+        viewCartBtn.click();
+        System.out.println("✅ Navigated to Cart page.");
+
+        // ✅ Verify product exists in cart table
+        WebElement cartItem = wait.until(ExpectedConditions
+                .visibilityOfElementLocated(By.xpath("//table[@id='cart_info_table']//tr")));
+        if (cartItem.isDisplayed()) {
+            System.out.println("✅ Product is successfully present in Cart page.");
+        } else {
+            System.out.println("❌ Product not found in Cart page.");
+        }
+
+        driver.quit();
+    }
+}

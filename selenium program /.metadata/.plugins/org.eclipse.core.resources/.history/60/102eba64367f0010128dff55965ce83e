@@ -1,0 +1,47 @@
+package pac1;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+public class LAB_5_Part_1 {
+
+    public static void main(String[] args) {
+        System.out.println("Test Start...");
+
+        // Setup Chrome
+        WebDriverManager.chromedriver().setup();
+        WebDriver driver = new ChromeDriver();
+
+        // Step 1: Launch URL
+        driver.get("https://tutorialsninja.com/demo/index.php?");
+        driver.manage().window().maximize();
+
+        // Step 2: Click My Account
+        driver.findElement(By.xpath("//span[text()='My Account']")).click();
+
+        // Step 3: Click Register
+        driver.findElement(By.linkText("Register")).click();
+
+        // Step 4: Verify Register Account heading
+        WebElement heading = driver.findElement(By.tagName("h1"));
+        if (heading.getText().equals("Register Account")) {
+            System.out.println("Heading Verified: " + heading.getText());
+        } else {
+            System.out.println("Heading mismatch! Found: " + heading.getText());
+        }
+
+        // Step 5: Click Continue without filling form
+        driver.findElement(By.xpath("//input[@value='Continue']")).click();
+
+        // Step 6: Capture Warning message
+        WebElement warning = driver.findElement(By.cssSelector(".alert-danger"));
+        System.out.println("Warning Message: " + warning.getText());
+
+        // Close browser
+        driver.quit();
+        System.out.println("Test Completed!");
+    } 
+}

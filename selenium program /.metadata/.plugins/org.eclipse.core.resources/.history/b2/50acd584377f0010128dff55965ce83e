@@ -1,0 +1,56 @@
+package pac1;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+public class LAB_5_Part_4_5 {
+    public static void main(String[] args) throws Exception {
+        System.out.println("Test Start...");
+
+        WebDriver driver = new ChromeDriver();
+        driver.manage().window().maximize();
+
+        // Open registration page
+        driver.get("https://tutorialsninja.com/demo/index.php?route=account/register");
+
+        // Firstname
+        driver.findElement(By.id("input-firstname")).sendKeys("Srihitha");
+        // Lastname
+        driver.findElement(By.id("input-lastname")).sendKeys("P");
+        // Email
+        driver.findElement(By.id("input-email")).sendKeys("srihitha" + System.currentTimeMillis() + "@test.com");
+        // Telephone
+        driver.findElement(By.id("input-telephone")).sendKeys("9876543210");
+
+        // Password + Confirm
+        driver.findElement(By.id("input-password")).sendKeys("Test1234");
+        driver.findElement(By.id("input-confirm")).sendKeys("Test1234");
+
+        // Newsletter 'Yes'
+        driver.findElement(By.xpath("//input[@name='newsletter' and @value='1']")).click();
+
+        // Agree checkbox
+        driver.findElement(By.name("agree")).click();
+
+        // Click Continue button (input type)
+        driver.findElement(By.xpath("//input[@value='Continue']")).click();
+
+        // Verify success message
+        String successMsg = driver.findElement(By.xpath("//h1")).getText();
+        if (successMsg.equals("Your Account Has Been Created!")) {
+            System.out.println("Account creation successful!");
+        } else {
+            System.out.println("Message mismatch! Found: " + successMsg);
+        }
+
+        // Click Continue link (after success page)
+        driver.findElement(By.xpath("//a[text()='Continue']")).click();
+
+        // Click 'View your order history'
+        driver.findElement(By.linkText("View your order history")).click();
+
+        System.out.println("Test Completed!");
+        driver.quit();
+    }
+}

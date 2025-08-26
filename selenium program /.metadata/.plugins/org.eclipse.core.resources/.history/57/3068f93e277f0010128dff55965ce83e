@@ -1,0 +1,72 @@
+package pac1;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+public class LAB_5_Part_2 {
+x
+    public static void main(String[] args) throws InterruptedException {
+        System.out.println("Test Start...");
+
+        WebDriverManager.chromedriver().setup();
+        WebDriver driver = new ChromeDriver();
+
+        // Step 1: Launch and go to Register page
+        driver.get("https://tutorialsninja.com/demo/index.php?route=account/register");
+        driver.manage().window().maximize();
+
+        // -------- First Name --------
+        WebElement firstName = driver.findElement(By.id("input-firstname"));
+        firstName.sendKeys("ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFG"); // 33 chars
+
+        // Click Continue
+        driver.findElement(By.xpath("//input[@value='Continue']")).click();
+
+        // Verify error message for First Name (if exists)
+        try {
+            WebElement error1 = driver.findElement(By.xpath("//div[text()='First Name must be between 1 and 32 characters!']"));
+            System.out.println("❌ Error for First Name: " + error1.getText());
+        } catch (Exception e) {
+            System.out.println("✅ First Name accepted 33 chars (no error shown).");
+        }
+
+        // Clear and enter valid First Name
+        firstName.clear();
+        firstName.sendKeys("Srihitha");
+
+        // -------- Last Name --------
+        WebElement lastName = driver.findElement(By.id("input-lastname"));
+        lastName.sendKeys("ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFG"); // 33 chars
+
+        driver.findElement(By.xpath("//input[@value='Continue']")).click();
+
+        try {
+            WebElement error2 = driver.findElement(By.xpath("//div[text()='Last Name must be between 1 and 32 characters!']"));
+            System.out.println("❌ Error for Last Name: " + error2.getText());
+        } catch (Exception e) {
+            System.out.println("✅ Last Name accepted 33 chars (no error shown).");
+        }
+
+        // Clear and enter valid Last Name
+        lastName.clear();
+        lastName.sendKeys("Pusuluru");
+
+        // -------- E-mail --------
+        WebElement email = driver.findElement(By.id("input-email"));
+        email.sendKeys("testuser123@gmail.com");
+
+        // -------- Telephone --------
+        WebElement telephone = driver.findElement(By.id("input-telephone"));
+        telephone.sendKeys("9876543210"); // valid between 3 and 32 chars
+
+        // Print confirmation
+        System.out.println("✅ Entered Personal Details successfully.");
+
+        // Close browser
+        driver.quit();
+        System.out.println("Test Completed!");
+    }
+}

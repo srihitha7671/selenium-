@@ -1,0 +1,31 @@
+package New;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+public class demo_automation {
+    public static void main(String[] args) {
+        // ✅ Correct path for Mac (NO .exe, NO backslash, NO extra quotes)
+        System.setProperty("webdriver.chrome.driver", "/Users/srihithapusuluru/Documents/selenium and chrome/selenium program/chrome drivers/chromedriver-mac-arm64/chromedriver");
+
+        // 1. Launch browser
+        WebDriver driver = new ChromeDriver();
+
+        // Maximize window
+        driver.manage().window().maximize();
+
+        // 2. Navigate to url 'http://automationexercise.com'
+        driver.get("https://automationexercise.com/products");
+
+        // 3. Verify that product page is visible successfully
+        String homePageTitle = driver.getTitle();
+        if (homePageTitle.contains("Products")) {
+            System.out.println("✅ Product page is visible successfully.");
+        } else {
+            System.out.println("❌ Product page is NOT visible.");
+        }
+
+        // Close browser
+        driver.quit();
+    }
+}

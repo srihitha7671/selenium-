@@ -1,0 +1,95 @@
+package pac1;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+import java.time.Duration;
+
+public class LAB_6 {
+    public static void main(String[] args) {
+        System.out.println("Lab 6 Test Start...");
+
+        // Setup ChromeDriver
+        WebDriverManager.chromedriver().setup();
+        WebDriver driver = new ChromeDriver();
+        driver.manage().window().maximize();
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        // Credentials from Lab 1/5
+        String email = "srihitha@test.com";
+        String password = "Test1234";
+
+        try {
+            // ------------------ Step 1: Login ------------------
+            driver.get("https://tutorialsninja.com/demo/index.php?");
+            driver.findElement(By.xpath("//span[text()='My Account']")).click();
+            driver.findElement(By.linkText("Login")).click();
+
+            driver.findElement(By.id("input-email")).sendKeys(email);
+            driver.findElement(By.id("input-password")).sendKeys(password);
+            driver.findElement(By.xpath("//input[@value='Login']")).click();
+            System.out.println("Login successful with: " + email);
+
+            // ------------------ Step 2-5: Components → Monitors ------------------
+            driver.findElement(By.linkText("Components")).click();
+            driver.findElement(By.linkText("Monitors (2)")).click();
+            driver.findElement(By.id("input-limit")).sendKeys("25");
+            driver.findElement(By.xpath("(//button[@data-original-title='Add to Cart'])[1]")).click();
+
+            // ------------------ Step 6-9: Specification & Wishlist ------------------
+            driver.findElement(By.linkText("Specification")).click();
+            WebElement specTab = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("tab-specification")));
+            System.out.println("Specification tab displayed: " + specTab.isDisplayed());
+
+            driver.findElement(By.xpath("//button[@data-original-title='Add to Wish List']")).click();
+            WebElement wishlistMsg = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".alert-success")));
+            System.out.println("Wishlist Message: " + wishlistMsg.getText());
+
+            // ------------------ Step 10-16: Search Mobile → HTC Touch HD ------------------
+            driver.findElement(By.name("search")).sendKeys("Mobile");
+            driver.findElement(By.cssSelector("div#search button")).click();
+            driver.findElement(By.name("description")).click();
+            driver.findElement(By.linkText("HTC Touch HD")).click();
+
+            WebElement qty = driver.findElement(By.id("input-quantity"));
+            qty.clear();
+            qty.sendKeys("3");
+            driver.findElement(By.id("button-cart")).click();
+
+            WebElement cartMsg = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".alert-success")));
+            System.out.println("Cart Message: " + cartMsg.getText());
+
+            // ------------------ Step 17-18: View Cart ------------------
+            driver.findElement(By.id("cart-total")).click();
+            driver.findElement(By.linkText("View Cart")).click();
+
+            WebElement cartItem = wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText("HTC Touch HD")));
+            System.out.println("Cart contains: " + cartItem.getText());
+
+            // ------------------ Step 19: Checkout ------------------
+            driver.findElement(By.linkText("Checkout")).click();
+            System.out.println("Navigated to Checkout page");
+
+            // ------------------ Step 20-23: Logout ------------------
+            driver.findElement(By.xpath("//span[text()='My Account']")).click();
+            driver.findElement(By.linkText("Logout")).click();
+
+            WebElement logoutHeading = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//h1[text()='Account Logout']")));
+            System.out.println("Logout Verified: " + logoutHeading.getText());
+
+            driver.findElement(By.linkText("Continue")).click();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            driver.quit();
+            System.out.println("\nLab 6 Test Completed!");
+        }
+    }
+}
